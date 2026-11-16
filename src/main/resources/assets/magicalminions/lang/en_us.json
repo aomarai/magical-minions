@@ -1,0 +1,9 @@
+{
+  "magicalminions.configuration.title": "Magical Minions",
+  "magicalminions.configuration.maxCommandPoints": "Max Command Points",
+  "magicalminions.configuration.animusFarmMultiplier": "Animus farm multiplier",
+  "magicalminions.configuration.teleportFollowDistance": "Teleport follow distance",
+  "magicalminions.configuration.minionsCanGrief": "Minions can grief",
+  "magicalminions.configuration.allowCrossDimensionRecall": "Allow cross-dimension recall",
+  "magicalminions.configuration.bondLossOnHit": "Bond loss on hit"
+}
