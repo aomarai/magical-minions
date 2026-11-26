@@ -1,5 +1,7 @@
 package com.aomarai.magicalminions;
 
+import com.aomarai.magicalminions.registry.MinionRegistries;
+import com.aomarai.magicalminions.registry.ModDataComponents;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -20,6 +22,8 @@ public final class MagicalMinions {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public MagicalMinions(IEventBus modEventBus, ModContainer modContainer) {
+        ModDataComponents.register(modEventBus);
+        MinionRegistries.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.SERVER, MinionsConfig.SPEC);
         LOGGER.info("Magical Minions is loading");
     }

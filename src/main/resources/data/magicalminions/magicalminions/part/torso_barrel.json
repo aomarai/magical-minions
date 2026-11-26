@@ -1,0 +1,14 @@
+{
+  "slot": "torso",
+  "function": "magicalminions:barrel_torso",
+  "frames": [
+    "medium"
+  ],
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/torso_barrel_rune_golem_medium"
+      }
+    }
+  }
+}

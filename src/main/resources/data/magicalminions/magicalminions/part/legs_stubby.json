@@ -1,0 +1,14 @@
+{
+  "slot": "legs",
+  "function": "magicalminions:stubby_legs",
+  "frames": [
+    "medium"
+  ],
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/legs_stubby_rune_golem_medium"
+      }
+    }
+  }
+}

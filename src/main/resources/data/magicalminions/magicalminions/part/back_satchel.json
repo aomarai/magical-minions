@@ -1,0 +1,17 @@
+{
+  "slot": "back",
+  "function": "magicalminions:satchel",
+  "frames": [
+    "medium"
+  ],
+  "modifiers": {
+    "inventory_slots": 9
+  },
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/back_satchel_rune_golem_medium"
+      }
+    }
+  }
+}

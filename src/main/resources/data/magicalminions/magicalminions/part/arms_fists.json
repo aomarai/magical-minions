@@ -1,0 +1,20 @@
+{
+  "slot": "arms",
+  "function": "magicalminions:fists",
+  "frames": [
+    "medium"
+  ],
+  "modifiers": {
+    "attack_damage": 3.0
+  },
+  "abilities": [
+    "magicalminions:melee"
+  ],
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/arms_fists_rune_golem_medium"
+      }
+    }
+  }
+}

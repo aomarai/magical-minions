@@ -1,0 +1,14 @@
+{
+  "slot": "head",
+  "function": "magicalminions:round_head",
+  "frames": [
+    "medium"
+  ],
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/head_round_rune_golem_medium"
+      }
+    }
+  }
+}
