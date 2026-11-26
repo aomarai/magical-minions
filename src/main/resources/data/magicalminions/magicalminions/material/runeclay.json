@@ -1,0 +1,8 @@
+{
+  "tier": 1,
+  "multipliers": {
+    "health": 0.8
+  },
+  "set_bonus": "magicalminions:self_repair",
+  "texture_suffix": "runeclay"
+}

@@ -113,6 +113,12 @@ neoForge {
             sourceSet(sourceSets.main)
         }
     }
+
+    // JUnit tests run in a Minecraft environment so codecs and registries behave as in game.
+    unitTest {
+        enable()
+        testedMod = mods.getByName(project.mod_id)
+    }
 }
 
 // Sets up a dependency configuration called 'localRuntime'.
@@ -124,6 +130,10 @@ configurations {
 }
 
 dependencies {
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     // GeckoLib: animated entity models and animations exported from Blockbench
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
@@ -188,6 +198,10 @@ publishing {
             url "file://${project.projectDir}/repo"
         }
     }
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,0 +1,22 @@
+{
+  "frames": [
+    "medium"
+  ],
+  "trait": "magicalminions:stoneguard",
+  "torso_models": {
+    "medium": "magicalminions:minion/torso/rune_golem_medium"
+  },
+  "sockets": [
+    "head",
+    "arms",
+    "legs",
+    "back",
+    "accessory"
+  ],
+  "default_parts": {
+    "torso": "magicalminions:torso_barrel",
+    "head": "magicalminions:head_round",
+    "arms": "magicalminions:arms_fists",
+    "legs": "magicalminions:legs_stubby"
+  }
+}

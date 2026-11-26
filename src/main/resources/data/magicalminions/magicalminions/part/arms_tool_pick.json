@@ -1,0 +1,22 @@
+{
+  "slot": "arms",
+  "function": "magicalminions:tool_arm_pick",
+  "frames": [
+    "medium"
+  ],
+  "bench_tier": 2,
+  "modifiers": {
+    "attack_damage": 4.0
+  },
+  "abilities": [
+    "magicalminions:melee",
+    "magicalminions:mine_pickaxe"
+  ],
+  "styles": {
+    "magicalminions:rune_golem": {
+      "models": {
+        "medium": "magicalminions:minion/part/arms_tool_pick_rune_golem_medium"
+      }
+    }
+  }
+}
