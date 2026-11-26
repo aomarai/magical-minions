@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script src="sprites.js"></script><script src="gui.js"></script>
+<script>
+(async () => {
+  setup(330, 216);
+  await ready();
+  world(0.66, 57);
+  const X = 52, Y = 12, W = 180, H = 192;
+  panel(X, Y, W, H);
+  text('Rune Inscriber', X + 9, Y + 7, { color: T.brass3 });
+  text('Tier II', X + W - 9, Y + 7, { align: 'right', size: 7, color: T.muted });
+
+  // Animus: the jar's fill is the gauge
+  inset(X + 8, Y + 19, 28, 34, T.soot1);
+  sprite('Animus Jar: three-quarter', X + 22, Y + 36, { center: true, fit: 30 });
+  text('Animus', X + 8, Y + 55, { size: 6, color: T.fox3 });
+  slot(X + 13, Y + 64, { item: 'Animus Vial', count: 3 });
+
+  // inputs
+  slot(X + 44, Y + 21, { item: 'Rune Blank' });
+  invSlot(X + 44, Y + 43, ['blaze', 2]);
+  text('Blank', X + 65, Y + 26, { size: 6, color: T.muted });
+  text('Catalyst', X + 65, Y + 48, { size: 6, color: T.muted });
+
+  // progress: chisel strokes cutting across a tablet-shaped bar
+  const AX = X + 94, AY = Y + 33;
+  inset(AX, AY, 24, 8, T.soot1);
+  rect(AX + 1, AY + 1, 14, 6, T.fox2); rect(AX + 1, AY + 1, 14, 1, T.fox3);
+  for (let i = 0; i < 3; i++) { rect(AX + 26 + i * 2, AY + 2 + i, 1, 4 - i * 2 > 0 ? 4 - i * 2 : 1, T.soot4); }
+  text('58%', AX + 12, AY + 10, { align: 'center', size: 6, color: T.muted });
+
+  // output
+  inset(X + 124, Y + 24, 26, 26, T.soot1);
+  frame(X + 123, Y + 23, 28, 28, T.brass1);
+  sprite('Rune of Ember', X + 137, Y + 37, { center: true, alpha: 0.45 });
+
+  // grade selector
+  text('Grade', X + 156, Y + 19, { size: 6, color: T.muted });
+  button(X + 154, Y + 27, 20, 12, 'I');
+  button(X + 154, Y + 41, 20, 12, 'II', { primary: true });
+  button(X + 154, Y + 55, 20, 12, 'III', { dim: true });
+
+  // description
+  inset(X + 44, Y + 66, 106, 26, '#211b18');
+  sprite('Rune of Ember', X + 47, Y + 71, { glow: true });
+  text('Rune of Ember II', X + 66, Y + 68, { size: 7, color: T.kiln3 });
+  text('Attacks set targets alight', X + 66, Y + 76, { size: 6 });
+  text('40 Animus · 1 catalyst', X + 66, Y + 84, { size: 6, color: T.fox3 });
+
+  const IX = X + 9, IY = Y + 108;
+  text('Inventory', IX, IY - 9, { size: 7, color: T.muted });
+  inventory(IX, IY, { 0: ['Rune Blank', 6], 2: ['blaze', 5], 3: ['Animus Vial', 2], 10: ['Runeclay', 14], 13: ['Moonsilver Ingot', 4], 20: ['cobble', 64], 24: ['Rune of Mending', 1] },
+    [['sword'], ['pick'], ['Starbrass Bell'], ['torch', 32], ['bread', 5], null, null, null, ['Runeclay', 4]]);
+
+  tooltip(X + 146, Y + 68, [
+    { t: 'Grade III locked' },
+    { t: 'Moonsilver Inscriber', c: T.madder4 },
+  ]);
+  document.title = 'done';
+})();
+</script></body></html>

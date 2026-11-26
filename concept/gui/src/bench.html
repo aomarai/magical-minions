@@ -1,0 +1,104 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script src="sprites.js"></script><script src="gui.js"></script>
+<script>
+const STYLE = { Golem: '#d98a58', Ember: '#f08a4a', Wisp: '#8af5d4', Mossling: '#8dbf4e', Acolyte: '#e3d9c0' };
+(async () => {
+  setup(480, 322);
+  await ready();
+  world(0.66, 11);
+  const X = 70, Y = 16, W = 340, H = 290;
+  panel(X, Y, W, H);
+  text("Conjurer's Bench", X + 9, Y + 7, { color: T.brass3 });
+  text('Core', X + W - 52, Y + 9, { color: T.muted });
+  slot(X + W - 28, Y + 5, { item: 'Runeclay Core' });
+
+  // ---- left: Torso first, then the five other part slots ----
+  const parts = [
+    ['Torso', null, 'Rune Golem', 'Golem'],
+    ['Head', 'Round Head', 'Golem', 'Golem', true],
+    ['Arms', 'Fists (floating gauntlets)', 'Golem', 'Golem'],
+    ['Legs', 'Stubby Legs', 'Golem', 'Golem'],
+    ['Back', 'Glide Wings', 'Ember', 'Ember'],
+    ['Accessory', 'Scarf', 'Mossling', 'Mossling'],
+  ];
+  parts.forEach((p, i) => {
+    const sy = Y + 24 + i * 25;
+    slot(X + 9, sy, { size: 22, selected: p[4], item: p[1] });
+    if (!p[1]) face('Rune Golem (Medium)', X + 10, sy + 1, 20);
+    text(p[0], X + 36, sy + 2, { color: p[4] ? T.brass3 : T.ink });
+    text(p[2], X + 36, sy + 12, { size: 7, color: STYLE[p[3]] });
+  });
+
+  // ---- center: live preview on the bench's linen mat and chalk ring ----
+  const PX = X + 84, PY = Y + 22, PW = 124, PH = 142;
+  inset(PX, PY, PW, PH, T.soot1);
+  const cx = PX + PW / 2, cy = PY + PH - 22;
+  for (let yy = -8; yy <= 8; yy++) { const hw = Math.round(54 * Math.sqrt(1 - (yy / 9) ** 2)); rect(cx - hw, cy + yy, hw * 2, 1, yy < 0 ? '#3a3127' : '#332a22'); }
+  for (let a = 0; a < 360; a += 3) { const r = a * Math.PI / 180; px(cx + Math.cos(r) * 46 | 0, cy + Math.sin(r) * 7 | 0, T.fox2); if (a % 12 === 0) px(cx + Math.cos(r) * 36 | 0, cy + Math.sin(r) * 5 | 0, T.fox1); }
+  sprite('Glide Wings', cx, cy - 58, { center: true, scale: 3 });
+  sprite('Rune Golem (Medium)', cx, cy - 42, { center: true, scale: 2 });
+  ['S', 'M', 'L'].forEach((f, i) => button(PX + 3 + i * 15, PY + 3, 13, 11, f, { primary: f === 'M', dim: f === 'S' }));
+  text('Pebble', PX + PW - 4, PY + 4, { align: 'right', color: T.brass3 });
+
+  // resonance under the preview
+  const RY = PY + PH + 5;
+  text('Resonance', PX, RY, { size: 7, color: T.muted });
+  for (let i = 0; i < 6; i++) { const on = i < 4; bevel(PX + 44 + i * 7, RY + 1, 5, 5, on ? T.fox2 : T.soot1, on ? T.fox3 : T.soot0, on ? T.fox1 : T.soot3); }
+  text('Golem 4/6', PX + PW, RY, { align: 'right', size: 7, color: T.fox3 });
+
+  // ---- right: tabs + part picker ----
+  const TX = X + 216, TY = Y + 22, TW = 116;
+  let tx = TX;
+  [['Parts', true], ['Material'], ['Tint'], ['Runes']].forEach(([t, on]) => {
+    const w = measure(t, 7) + 6;
+    bevel(tx, TY - (on ? 1 : 0), w, on ? 12 : 11, on ? T.soot3 : T.soot1, on ? T.soot4 : T.soot2, T.soot0);
+    text(t, tx + 3, TY + 2, { size: 7, color: on ? T.ink : T.muted, shadow: false });
+    tx += w + 1;
+  });
+  inset(TX, TY + 11, TW, 131, '#211b18');
+  text('Head  ·  style', TX + 4, TY + 15, { size: 7, color: T.muted });
+  const styles = [['Rune Golem (Medium)', 1], ['Ember Imp (Small)', 1], ['Bonebound Acolyte (Medium)', 0], ['Starlight Wisp (Small)', 1], ['Mossling (Medium)', 1]];
+  styles.forEach(([f, un], i) => {
+    const sx = TX + 4 + i * 22, sy = TY + 24;
+    slot(sx, sy, { size: 20, selected: i === 0, locked: !un });
+    if (un) face(f, sx + 2, sy + 2, 16); else sprite('Bone Sigil', sx + 2, sy + 2, { alpha: 0.35, glow: false });
+  });
+  text('Golem-style heads', TX + 4, TY + 48, { size: 7, color: T.muted });
+  const heads = [['Round Head', 'sel'], ['Cube Head'], ['Cyclops Head', 'hover'], ['Lantern Head'], ['Prospector Eye', 'locked'], [null], [null], [null]];
+  heads.forEach(([it, st], i) => {
+    const gx = TX + 4 + (i % 4) * 27, gy = TY + 57 + Math.floor(i / 4) * 27;
+    slot(gx, gy, { size: 25, item: st === 'locked' ? null : it, selected: st === 'sel', hover: st === 'hover', locked: st === 'locked' });
+    if (st === 'locked') sprite(it, gx + 12.5, gy + 12.5, { center: true, alpha: 0.25, glow: false });
+  });
+  divider(TX + 4, TY + 113, TW - 8);
+  text('HP 30   Armor 6   Speed 0.9', TX + 4, TY + 117, { size: 7 });
+  text('+ Stoneguard (Golem 4/6)', TX + 4, TY + 125, { size: 7, color: T.fox3 });
+  text('+ Glides (Ember wings)', TX + 4, TY + 133, { size: 7, color: '#f08a4a' });
+
+  // ---- cost + Animate ----
+  const BY = Y + 178;
+  text('Cost', X + 9, BY + 5, { color: T.muted });
+  slot(X + 34, BY, { item: 'Runeclay', count: 8 });
+  slot(X + 54, BY, { item: 'Starbrass Ingot', count: 2 });
+  slot(X + 74, BY, { item: 'Glimmer Gem', count: 1 });
+  text('Edits refund 50%', X + 98, BY + 6, { size: 7, color: T.muted });
+  button(X + W - 86, BY - 1, 76, 20, 'Animate', { primary: true });
+
+  // ---- player inventory ----
+  const IX = X + (W - 162) / 2, IY = Y + 206;
+  text('Inventory', IX, IY - 9, { size: 7, color: T.muted });
+  const inv = { 0: ['Runeclay', 23], 1: ['Starbrass Ingot', 7], 4: ['Glimmer Gem', 3], 9: ['cobble', 64], 12: ['Moonsilver Ingot', 2], 20: ['bread', 12], 22: ['Rune Blank', 3] };
+  inventory(IX, IY, inv, [['sword'], ['pick'], ['Starbrass Bell'], ['torch', 32], ['bread', 5], ['Animus Vial', 2], null, null, ['Runeclay', 4]], 2);
+
+  tooltip(TX + 80, TY + 44, [
+    { t: 'Cyclops Head (Golem)' },
+    { t: 'Head · Medium · Starbrass', c: T.muted },
+    { t: 'One wide eye: longer sight', c: T.fox3 },
+    { t: 'Hover to ghost it on Pebble', c: T.muted, s: 7 },
+  ]);
+  document.title = 'done';
+})();
+</script></body></html>

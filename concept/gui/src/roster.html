@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script src="sprites.js"></script><script src="gui.js"></script>
+<script>
+(async () => {
+  setup(420, 290);
+  await ready();
+  world(0.66, 23);
+  const X = 40, Y = 14, W = 340, H = 262;
+  panel(X, Y, W, H);
+  sprite('Starbrass Bell', X + 7, Y + 4);
+  text('Bond Bell  ·  Roster', X + 26, Y + 8, { color: T.brass3 });
+
+  // Command Points: four Soulglass pips
+  text('Command Points', X + W - 112, Y + 8, { size: 7, color: T.muted });
+  for (let i = 0; i < 4; i++) bevel(X + W - 46 + i * 9, Y + 8, 7, 7, T.fox2, T.fox3, T.fox1, T.soot0);
+  text('4/4 · party full', X + W - 9, Y + 17, { align: 'right', size: 6, color: T.brass3 });
+
+  // ---- Active party: cards sized by Command Point cost ----
+  text('Active party', X + 9, Y + 25, { size: 7, color: T.muted });
+  const cards = [
+    { name: 'Pebble', sub: 'Golem · M', art: 'Rune Golem (Medium)', cp: 1, hp: 1.0, bond: 5 },
+    { name: 'Cinder', sub: 'Imp · S', art: 'Ember Imp (Small)', cp: 1, hp: 0.7, bond: 2 },
+    { name: 'Ossian', sub: 'Colossus · L', art: 'Colossus (Large Rune Golem)', cp: 2, hp: 0.9, bond: 4 },
+  ];
+  let cx = X + 9; const CY = Y + 35, unit = 74;
+  cards.forEach(c => {
+    const w = unit * c.cp + (c.cp - 1) * 6, pw = c.cp === 2 ? 46 : 32;
+    bevel(cx, CY, w, 68, T.soot3, T.soot4, T.soot1, T.soot0);
+    inset(cx + 3, CY + 3, pw, 44, T.soot1);
+    sprite(c.art, cx + 3 + pw / 2, CY + 25, { center: true, fit: pw - 2 });
+    const tx = cx + pw + 7, bw = w - (tx - cx) - 5;
+    text(c.name, tx, CY + 5);
+    text(c.sub, tx, CY + 15, { size: 6, color: T.muted });
+    inset(tx, CY + 26, bw, 5, T.soot1);
+    rect(tx + 1, CY + 27, (bw - 2) * c.hp, 3, c.hp > 0.8 ? T.fox2 : T.kiln3);
+    text(c.cp + ' CP', tx, CY + 35, { size: 7, color: T.fox3 });
+    hearts(cx + 4, CY + 53, c.bond);
+    cx += w + 6;
+  });
+
+  // ---- all minions ----
+  const LY = Y + 110;
+  text('All minions (6)', X + 9, LY, { size: 7, color: T.muted });
+  text('Lv', X + 162, LY, { size: 7, color: T.muted });
+  text('Bond', X + 180, LY, { size: 7, color: T.muted });
+  text('Where', X + 228, LY, { size: 7, color: T.muted });
+  const rows = [
+    ['Rune Golem (Medium)', 'Pebble', 'Rune Golem · M', 12, 5, ['Active', T.fox1, T.fox4], 'Recall'],
+    ['Ember Imp (Small)', 'Cinder', 'Ember Imp · S', 7, 2, ['Active', T.fox1, T.fox4], 'Recall'],
+    ['Rune Golem (Medium)', 'Ossian', 'Colossus · L', 9, 4, ['Active', T.fox1, T.fox4], 'Recall'],
+    ['Mossling (Medium)', 'Bramble', 'Mossling · M', 5, 3, ['Pedestal', T.stone2, T.ink], 'Deploy', true],
+    ['Starlight Wisp (Small)', 'Glim', 'Starlight Wisp · S', 4, 3, ['Soul Lantern', T.indigo1, T.glass3], 'Deploy'],
+    ['Dormant Core', 'Rubble', 'Rune Golem · S', 3, 1, ['Dormant', T.soot3, T.muted], 'Revive'],
+  ];
+  rows.forEach((r, i) => {
+    const ry = LY + 9 + i * 20;
+    if (r[7]) { rect(X + 6, ry - 1, W - 12, 20, 'rgba(234,196,102,0.08)'); frame(X + 6, ry - 1, W - 12, 20, T.brass1); }
+    else if (i % 2 === 0) rect(X + 6, ry - 1, W - 12, 20, 'rgba(248,240,216,0.03)');
+    slot(X + 9, ry, {});
+    if (r[0] === 'Dormant Core') sprite('Dormant Core', X + 10, ry + 1); else face(r[0], X + 10, ry + 1, 16);
+    const dim = r[5][0] === 'Dormant';
+    text(r[1], X + 31, ry + 1, { color: dim ? T.muted : T.ink });
+    text(r[2], X + 31, ry + 10, { size: 6, color: T.muted });
+    text(String(r[3]), X + 162, ry + 5);
+    hearts(X + 180, ry + 6, r[4]);
+    chip(X + 228, ry + 4, ...r[5]);
+    if (r[7]) {
+      button(X + W - 50, ry + 2, 42, 14, 'Party full', { dim: true, size: 6 });
+    } else button(X + W - 50, ry + 2, 42, 14, r[6], { dim: dim });
+  });
+
+  // ---- presets ----
+  const PY = Y + H - 21;
+  divider(X + 6, PY - 5, W - 12);
+  text('Presets', X + 9, PY + 3, { size: 7, color: T.muted });
+  ['Adventure', 'Farm', 'Nether'].forEach((p, i) => button(X + 46 + i * 54, PY, 50, 14, p, { primary: i === 0 }));
+  button(X + W - 72, PY, 64, 14, 'Recall all');
+  document.title = 'done';
+})();
+</script></body></html>

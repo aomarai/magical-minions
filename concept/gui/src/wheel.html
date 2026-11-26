@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600&display=block" rel="stylesheet">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script src="sprites.js"></script><script src="gui.js"></script>
+<script>
+(async () => {
+  setup(400, 250);
+  await ready();
+  world(0.22, 41);
+  const cx = 200, cy = 114;
+  // the minion standing in the world
+  sprite('Colossus (Large Rune Golem)', cx, cy - 4, { center: true, scale: 1 });
+  // chalk rune ring under it
+  for (let a = 0; a < 360; a += 3) { const r = a * Math.PI / 180; px(cx + Math.cos(r) * 32 | 0, cy + 32 + Math.sin(r) * 6 | 0, 'rgba(63,208,168,0.75)'); }
+
+  const opts = [['Following', 'Stubby Legs', 'Follow / Stay'], ['Defensive', 'Shield Arm', 'Stance'], ['Inventory', 'Satchel'], ['Ride', 'Harness'], ['Go home', 'Rune of Ender Link'], ['Info', 'Minion Blueprint']];
+  const R = 74;
+  opts.forEach(([label, icon, kind], i) => {
+    const a = (-90 + i * 60) * Math.PI / 180;
+    const bx = Math.round(cx + Math.cos(a) * R - 32), by = Math.round(cy + Math.sin(a) * R * 0.84 - 11);
+    const sel = label === 'Ride';
+    if (sel) for (let t = 0.32; t < 0.74; t += 0.025) px(cx + Math.cos(a) * R * t | 0, cy + Math.sin(a) * R * 0.84 * t | 0, T.brass3);
+    bevel(bx, by, 64, 22, sel ? T.soot3 : 'rgba(43,35,32,0.94)', sel ? T.soot4 : T.soot3, T.soot1, T.soot0);
+    if (sel) frame(bx - 1, by - 1, 66, 24, T.brass3);
+    sprite(icon, bx + 11, by + 11, { center: true, fit: 16 });
+    if (kind) { text(kind, bx + 22, by + 3, { size: 6, color: T.muted }); text(label, bx + 22, by + 11, { size: 7, color: sel ? T.brass3 : T.ink }); }
+    else text(label, bx + 22, by + 7, { size: 7, color: sel ? T.brass3 : T.ink });
+  });
+
+  // nameplate
+  const nx = cx - 58, ny = 8;
+  bevel(nx, ny, 116, 28, 'rgba(27,22,19,0.94)', T.soot3, T.soot0, T.soot0);
+  frame(nx + 1, ny + 1, 114, 26, T.brass1);
+  face('Rune Golem (Medium)', nx + 4, ny + 6, 16);
+  text('Ossian', nx + 24, ny + 5, { color: T.brass3 });
+  text('Colossus · Lv 9 · Stoic', nx + 24, ny + 15, { size: 6, color: T.muted });
+  hearts(nx + 72, ny + 5, 4);
+
+  text('Ride: climb into the harness (Large frames with a Harness only)', cx, cy + 86, { align: 'center', size: 7 });
+  text('Right-click a minion to open  ·  sneak + right-click with an empty hand to pet', cx, cy + 96, { align: 'center', size: 6, color: T.muted });
+
+  // vanilla HUD
+  const hx = cx - 91, hy = CH - 24;
+  rect(hx, hy, 182, 22, 'rgba(0,0,0,0.55)'); frame(hx, hy, 182, 22, '#555');
+  [['sword'], ['pick'], ['Starbrass Bell'], ['torch'], ['bread'], ['Animus Vial'], null, null, ['Runeclay']].forEach((it, i) => {
+    if (!it) return; if (VAN[it[0]]) van(it[0], hx + 3 + i * 20, hy + 3); else sprite(it[0], hx + 3 + i * 20, hy + 3, { fit: 16 });
+  });
+  frame(hx + 40, hy - 1, 22, 24, '#fff'); frame(hx + 41, hy, 20, 22, '#999');
+  document.title = 'done';
+})();
+</script></body></html>
